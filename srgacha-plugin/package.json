@@ -1,0 +1,7 @@
+{
+  "name": "srgacha-plugin",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Miao-Yunzai 星穹铁道五星抽卡记录插件"
+}

@@ -1,0 +1,9 @@
+{
+  "requestTimeoutMs": 30000,
+  "networkRetryCount": 1,
+  "pageDelayMs": 300,
+  "poolDelayMs": 250,
+  "maxPagesPerPool": 1000,
+  "detailMaxLog": 30,
+  "statMaxVersion": 10
+}
