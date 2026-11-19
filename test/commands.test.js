@@ -54,6 +54,38 @@ test('查看和统计命令允许省略星号，补齐老版全部记录/全部�
   }
 })
 
+
+test('wx 前缀大小写不敏感，覆盖更新、记录、全部记录、统计及全部统计指令', () => {
+  const commands = [
+    ['wx更新抽卡记录', 'update'],
+    ['wx角色记录', 'roleRecords'],
+    ['wx角色全部记录', 'roleAllRecords'],
+    ['wx光锥记录', 'lightconeRecords'],
+    ['wx光锥全部记录', 'lightconeAllRecords'],
+    ['wx常驻记录', 'normalRecords'],
+    ['wx常驻全部记录', 'normalAllRecords'],
+    ['wx全部记录', 'allRecords'],
+    ['wx角色统计', 'roleStats'],
+    ['wx角色全部统计', 'roleAllStats'],
+    ['wx光锥统计', 'lightconeStats'],
+    ['wx光锥全部统计', 'lightconeAllStats'],
+    ['wx常驻统计', 'normalStats'],
+    ['wx常驻全部统计', 'normalAllStats'],
+    ['wx全部统计', 'allStats']
+  ]
+  const variants = ['wx', 'WX', 'Wx', 'wX']
+  for (const [canonical, expected] of commands) {
+    for (const prefix of variants) {
+      const input = `${prefix}${canonical.slice(2)}`
+      assert.equal(matchCommand(input)?.name, expected, input)
+      assert.equal(matchCommand(`*${input}`)?.name, expected, `*${input}`)
+      assert.equal(matchCommand(`#星铁${input}`)?.name, expected, `#星铁${input}`)
+    }
+  }
+  assert.equal(matchCommand('WX角色记录 100820596')?.uid, '100820596')
+  assert.equal(matchCommand('*wX更新抽卡记录 100820596')?.uid, '100820596')
+})
+
 test('Miao-Yunzai 事件规则使用同一组命令正则，避免业务解析与事件匹配不一致', () => {
   const appSource = readFileSync(new URL('../apps/srgacha.js', import.meta.url), 'utf8')
   for (const key of Object.keys(COMMANDS)) {
@@ -63,4 +95,5 @@ test('Miao-Yunzai 事件规则使用同一组命令正则，避免业务解析�
   const normalized = miaoNormalizeStarRailPrefix('*wx抽卡记录')
   assert.equal(normalized, '#星铁wx抽卡记录')
   assert.equal(COMMANDS.roleRecords.test(normalized), true)
+  assert.equal(COMMANDS.roleRecords.test('#星铁WX角色记录'), true)
 })
